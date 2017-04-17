@@ -2,7 +2,7 @@
  * Created by focus on 2017/4/14.
  */
 
-export default {
+module.exports = {
     email: {
         test: /.+@.+\..+/,
         message: '邮箱格式错误'

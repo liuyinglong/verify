@@ -1,4 +1,4 @@
-export  default  (function () {
+module.exports=  (function () {
 
     /**
      * Guard text output, make sure undefined outputs

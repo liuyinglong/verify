@@ -2,9 +2,9 @@
  * Created by focus on 2017/4/14.
  */
 
-import defaultRules from "./defaultRules";
-import _  from 'lodash';
-import domTools from "./domTools";
+var defaultRules = require("./defaultRules");
+var _ = require("lodash");
+var domTools = require("./domTools");
 
 /**
  * check value type
@@ -16,18 +16,18 @@ function is(type, val) {
     return Object.prototype.toString.call(val) === ("[object " + type + "]")
 }
 
-let Vue;
+var Vue;
 
-const Verify = function (VueComponent) {
+var Verify = function (VueComponent) {
     this.vm = VueComponent;
     this.verifyQueue = {};                        //验证队列
     Vue.util.defineReactive(this, '$errors', {});
 };
 
-const validate = function (field, rule) {
-    let self = this;                          //this指向组件
-    let vm = self;                         //Vue组件对象
-    let value = _.get(vm, field);
+var validate = function (field, rule) {
+    var self = this;                          //this指向组件
+    var vm = self;                         //Vue组件对象
+    var value = _.get(vm, field);
 
     //如果为验证规则为数组则进行遍历
     if (Array.isArray(rule)) {
@@ -48,10 +48,10 @@ const validate = function (field, rule) {
     }
 
     //验证数据
-    let valid = is("Function", rule.test) ? rule.test.call(this, value) : rule.test.test(value);
+    var valid = is("Function", rule.test) ? rule.test.call(this, value) : rule.test.test(value);
 
     //错误列表
-    let $error = _.get(vm.$verify.$errors, field);
+    var $error = _.get(vm.$verify.$errors, field);
 
     //验证未通过
     if (!valid) {
@@ -61,10 +61,10 @@ const validate = function (field, rule) {
 };
 
 Verify.prototype.check = function (group) {
-    let self = this;
-    let vm = this.vm;   //Vue实例
-    let rules = vm.$options.verify;
-    let verifyQueue;
+    var self = this;
+    var vm = this.vm;   //Vue实例
+    var rules = vm.$options.verify;
+    var verifyQueue;
 
     if (group) {
         if (!vm.$verify.verifyQueue[group]) {
@@ -76,7 +76,7 @@ Verify.prototype.check = function (group) {
         verifyQueue = vm.$verify.verifyQueue[group];
     } else {
         verifyQueue = [];
-        for (let k in vm.$verify.verifyQueue) {
+        for (var k in vm.$verify.verifyQueue) {
             verifyQueue = verifyQueue.concat(verifyQueue, vm.$verify.verifyQueue[k])
         }
     }
@@ -92,15 +92,15 @@ Verify.prototype.check = function (group) {
 
 };
 
-const init = function () {
-    let self = this;                    //this 指向Vue实例
+var init = function () {
+    var self = this;                    //this 指向Vue实例
     if (!self.$options.verify) {         //验证规则为空 结束
         return;
     }
     this.$verify = new Verify(self);    //添加vm实例验证属性
 };
 
-const verifyInit = function (_Vue, options) {
+var verifyInit = function (_Vue, options) {
     Vue = _Vue;
     if (options && options.rules) {
         Object.assign(defaultRules, defaultRules, options.rules);
@@ -111,18 +111,20 @@ const verifyInit = function (_Vue, options) {
 };
 
 //自定义指令
-const Directive = function (Vue, options) {
+var Directive = function (Vue, options) {
     Vue.directive("verify", {
         bind: function (el, binding, vnode, oldVnode) {
-            let vm = vnode.context;//当前组件实例
-            let expression = binding.expression;
-            let errorClass = el.getAttribute('verify-class') || 'verify-error';
+            var vm = vnode.context;//当前组件实例
+            var expression = binding.expression;
+            var errorClass = el.getAttribute('verify-class') || 'verify-error';
 
             //得到焦点 移除错误
             el.addEventListener("focus", function () {
                 _.set(vm.$verify.$errors, expression, []);
             });
-            let group;
+
+            //添加到验证队列
+            var group;
             if (binding.rawName.split(".").length > 1) {
                 group = binding.rawName.split(".").pop();
             } else {
@@ -134,7 +136,6 @@ const Directive = function (Vue, options) {
                 vm.$verify.verifyQueue[group] = [];
                 vm.$verify.verifyQueue[group].push(expression);
             }
-            //添加到验证队列
 
 
             //添加数据监听绑定 getter setter
@@ -171,9 +172,8 @@ const Directive = function (Vue, options) {
     })
 };
 
-const install = function (Vue, options) {
+var install = function (Vue, options) {
     verifyInit(Vue, options);
     Directive(Vue, options);
 };
-
-export default install;
+module.exports = install;
