@@ -65,7 +65,6 @@ Verify.prototype.check = function (group) {
     var vm = this.vm;   //Vue实例
     var rules = vm.$options.verify;
     var verifyQueue;
-
     if (group) {
         if (!vm.$verify.verifyQueue[group]) {
             console.warn(group + " not found in the component");
