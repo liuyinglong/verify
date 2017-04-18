@@ -103,10 +103,29 @@ v-verified 错误展示，当有错误时会展示，没有错误时会加上sty
 ##### 修饰符说明
 > .join 展示所有错误 用逗号隔开
 
+##### 自定义验证规则
 
+```js
+var myRules={
+    phone:{
+        test:/^1[34578]\d{9}$/,
+        message:"电话号码格式不正确"
+    },
+    max6:{
+        test:function(val){
+            if(val.length>6) {
+                return false
+            }
+            return true;
+        },
+        message:"最大为6位"
+    }
+    
+}
+import Vue from "vue";
+import verify from "vue-verify-plugin";
+Vue.use(verify,{
+    rules:myRules
+});
 
-
-
-
-
-
+```
