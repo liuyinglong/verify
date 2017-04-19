@@ -62,11 +62,25 @@ export default{
     }
 }
 ```  
+### 验证错误信息说明
+验证之后的错误存储在 vm.$verify.$errors 中，可自行打印出
+vm.$verify.$errorArray 存储上一次验证的错误
+
+
+### 配置说明
+配置传入一个对象
+```js
+{
+    rules:{}//自定义验证方法
+    blur:Bool //失去焦点时 是否开启验证
+}
+```
+
 
 ### 指令说明
 
 #### v-verify
-v-erify 在表单控件元素上创建数据的验证规则，他会自动匹配要验证的值以及验证的规则。
+在表单控件元素上创建数据的验证规则，他会自动匹配要验证的值以及验证的规则。
 
 ##### v-verify 修饰符说明
 该指令最后一个修饰符为自定义分组  
@@ -84,6 +98,15 @@ this.$verify.check("student")
 this.$verify.check("teacher")
 //验证所有
 this.$verify.check();
+```
+
+##### v-verify指令也可使用 arg参数进行验证分组 
+**如果同时使用修饰符和arg分组 则arg会覆盖修饰符分组**
+
+```js
+v-verify:student
+//验证student 分组
+this.$verify.check("student")
 ```
 
 #### v-verified

@@ -42,20 +42,21 @@ var validate = function (field, rule) {
     }
 
     //如果验证规则不存在 结束
-    if (!rule && !!rule.test) {
-        console.warn("rule of " + field + "not define");
+    if (!rule || !rule.test) {
+        console.warn("rule of " + field + " not define");
         return false;
     }
 
     //验证数据
     var valid = is("Function", rule.test) ? rule.test.call(this, value) : rule.test.test(value);
 
-    //错误列表
+    //错误对象
     var $error = _.get(vm.$verify.$errors, field);
 
     //验证未通过
     if (!valid) {
         $error.push(rule.message);
+        vm.$verify.$errorArray.push(rule.message);
     }
     return valid;
 };
@@ -71,6 +72,7 @@ Verify.prototype.check = function (group) {
         }
     }
 
+    //分组处理
     if (group && vm.$verify.verifyQueue[group]) {
         verifyQueue = vm.$verify.verifyQueue[group];
     } else {
@@ -79,6 +81,9 @@ Verify.prototype.check = function (group) {
             verifyQueue = verifyQueue.concat(verifyQueue, vm.$verify.verifyQueue[k])
         }
     }
+
+    //错误数组,按照本次验证的顺序推入数组
+    vm.$verify.$errorArray = [];
 
     //遍历验证队列进行验证
     return verifyQueue.map(function (item) {
@@ -122,10 +127,22 @@ var Directive = function (Vue, options) {
                 _.set(vm.$verify.$errors, expression, []);
             });
 
+            //失去焦点 进行验证
+            if(options.blur){
+                el.addEventListener("blur", function () {
+                    vm.$verify.$errorArray = [];
+                    validate.call(vm, expression, _.get(vm.$options.verify, expression));
+                });
+            }
+
             //添加到验证队列
             var group;
             if (binding.rawName.split(".").length > 1) {
                 group = binding.rawName.split(".").pop();
+            } else if (binding.arg) {
+                //如果arg存在
+                //v-verify:arg
+                group = binding.arg;
             } else {
                 group = "";
             }
@@ -136,12 +153,12 @@ var Directive = function (Vue, options) {
                 vm.$verify.verifyQueue[group].push(expression);
             }
 
-
             //添加数据监听绑定 getter setter
             Vue.util.defineReactive(vm.$verify.$errors, expression, []);
 
             //错误默认值为空
             _.set(vm.$verify.$errors, expression, []);
+
 
             //监听错误 移除对应的Class
             vm.$watch("$verify.$errors." + expression, function (val) {
@@ -150,7 +167,7 @@ var Directive = function (Vue, options) {
                 } else {
                     domTools.removeClass(el, errorClass);
                 }
-            })
+            });
         }
     });
 
@@ -175,4 +192,5 @@ var install = function (Vue, options) {
     verifyInit(Vue, options);
     Directive(Vue, options);
 };
+
 module.exports = install;
