@@ -128,7 +128,7 @@ var Directive = function (Vue, options) {
             });
 
             //失去焦点 进行验证
-            if(options.blur){
+            if(options && options.blur){
                 el.addEventListener("blur", function () {
                     vm.$verify.$errorArray = [];
                     validate.call(vm, expression, _.get(vm.$options.verify, expression));
