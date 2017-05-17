@@ -1,67 +1,87 @@
 # verify
 
 ### install 
-```js
+```
 npm install vue-verify-plugin
 ```
 
 ### use
-- html
-```html
-<div>
-    <div>
-        <input type="text" placeholder="姓名" v-verify.grow1="username" v-model="username"/>
-        <label v-verified="verifyError.username"></label>
+```vue
+<template>
+    <div id="app">
+        <div>
+            <input-box>
+                <input type="text" v-model.trim="username" v-verify="username" placeholder="姓名"/>
+                <label v-verified="verifyError.username"></label>
+            </input-box>
+            <div>
+                <input type="password" v-model="pwd" v-verify="pwd" placeholder="密码"/>
+                <label v-verified="verifyError.pwd"></label>
+            </div>
+            <div>
+                <input type="text" v-model="email" v-verify="email" placeholder="邮箱"/>
+                <label v-verified="verifyError.email"></label>
+            </div>
+            <div>
+                <button v-on:click="submit">提交</button>
+            </div>
+            <div>{{$verify.$errorArray}}</div>
+        </div>
     </div>
-    <div>
-        <input type="password" placeholder="密码" v-verify.grow1="pwd" v-model="pwd"/>
-        <label v-verified="verifyError.pwd"></label>
-    </div>
-    <button v-on:click="submit">确认</button>
- </div>
-```
-- js
-```js
-import Vue from "vue";
-import verify from "vue-verify-plugin";
-Vue.use(verify);
+</template>
 
-export default{
-    data:function(){
-        return {
-            username:"",
-            pwd:""
-        }
-    },
-    methods:{
-        submit:function(){
-            if(this.$verify.check()){
-                //通过验证    
-            }
-        }
-    },
-    verify:{
-        username:[
-            "required",
-            {
-                test:function(val){
-                    if(val.length<2){
-                        return false;
+<script>
+    import Vue from "vue";
+    import verify from "../verify/src/verify";
+    import inputBox from "./inputBox.vue"
+    Vue.use(verify);
+    export default {
+        name: 'app',
+        data () {
+            return {
+                username: "",
+                pwd: "",
+                email: "",
+                a: {
+                    b: {
+                        c: "123"
                     }
-                    return true;
-                },
-                message:"姓名不得小于2位"
+                }
             }
-        ]，
-        pwd:"required"
-    }，
-    computed:{
-        verifyError:function(){
-            return this.$verify.$errors;
+        },
+        verify: {
+            username: [
+                "required",
+                {
+                    minLength:2,
+                    message: "姓名不得小于两位"
+                },
+                {
+                    maxLength:5
+                }
+                ],
+            pwd: {
+                minLength:6,
+                message: "密码不得小于6位"
+            }
+        },
+        computed: {
+            verifyError: function () {
+                return this.$verify.$errors;
+            }
+        },
+        methods: {
+            submit: function () {
+                console.log(this.$verify.check());
+            }
+        },
+        components: {
+            inputBox
         }
     }
-}
-```  
+</script>
+```
+ 
 ### 验证错误信息说明
 验证之后的错误存储在 vm.$verify.$errors 中，可自行打印出
 vm.$verify.$errorArray 存储上一次验证的错误
@@ -126,8 +146,37 @@ v-verified 错误展示，当有错误时会展示，没有错误时会加上sty
 ##### 修饰符说明
 > .join 展示所有错误 用逗号隔开
 
-##### 自定义验证规则
+##### 默认验证规则
+- email 邮箱规则验证
+- mobile 手机号码验证
+- required 必填
+- url 链接规则验证
+- maxLength 最多maxLength个字符串(可自定义message)
+- minLength 最少minLength个字符串(可自定义)
 
+> 实例
+```
+verify: {
+    username: [
+        "required",
+        {
+            minLength:2,
+            message: "姓名不得小于两位"
+        },
+        {
+            maxLength:5
+        }
+    ],
+    mobile:"required",
+    email:"email"
+    pwd: {
+        minLength:6,
+        message: "密码不得小于6位"
+    }
+},
+```
+
+##### 新增默认规则
 ```js
 var myRules={
     phone:{
@@ -150,5 +199,4 @@ import verify from "vue-verify-plugin";
 Vue.use(verify,{
     rules:myRules
 });
-
 ```
