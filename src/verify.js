@@ -41,14 +41,39 @@ var validate = function (field, rule) {
         rule = defaultRules[rule];
     }
 
-    //如果验证规则不存在 结束
-    if (!rule || !rule.test) {
+    // //如果验证规则不存在 结束
+    if (!(rule && (rule.test || rule.maxLength || rule.minLength))) {
         console.warn("rule of " + field + " not define");
         return false;
     }
 
-    //验证数据
-    var valid = is("Function", rule.test) ? rule.test.call(this, value) : rule.test.test(value);
+
+    var valid=true;
+    if (rule && rule.test) {
+        //验证数据
+        valid = is("Function", rule.test) ? rule.test.call(this, value) : rule.test.test(value);
+    }
+
+
+    if (rule && rule.maxLength) {
+        if (value.length > rule.maxLength) {
+            valid = false;
+            if (!rule.message) {
+                rule.message = "至多" + rule.maxLength + "个字符";
+            }
+        }
+    }
+
+    if (rule && rule.minLength) {
+        if (value.length < rule.minLength) {
+            valid = false;
+            if (!rule.message) {
+                rule.message = "至少" + rule.maxLength + "个字符";
+            }
+        }
+    }
+
+
 
     //错误对象
     var $error = _.get(vm.$verify.$errors, field);
@@ -128,7 +153,7 @@ var Directive = function (Vue, options) {
             });
 
             //失去焦点 进行验证
-            if(options && options.blur){
+            if (options && options.blur) {
                 el.addEventListener("blur", function () {
                     vm.$verify.$errorArray = [];
                     validate.call(vm, expression, _.get(vm.$options.verify, expression));
