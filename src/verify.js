@@ -68,7 +68,7 @@ var validate = function (field, rule) {
         if (value.length < rule.minLength) {
             valid = false;
             if (!rule.message) {
-                rule.message = "至少" + rule.maxLength + "个字符";
+                rule.message = "至少" + rule.minLength + "个字符";
             }
         }
     }
@@ -177,12 +177,20 @@ var Directive = function (Vue, options) {
                 vm.$verify.verifyQueue[group] = [];
                 vm.$verify.verifyQueue[group].push(expression);
             }
-
-            //添加数据监听绑定 getter setter
-            Vue.util.defineReactive(vm.$verify.$errors, expression, []);
-
-            //错误默认值为空
+    
+            // //错误默认值为空
             _.set(vm.$verify.$errors, expression, []);
+    
+            var tempExpression=expression.split(".");
+            var tempErrors=vm.$verify.$errors;
+            for(let i=0;i<tempExpression.length-1;i++){
+                tempErrors=tempErrors[tempExpression[i]];
+            }
+            var key=tempExpression[tempExpression.length-1];
+    
+    
+            //添加数据监听绑定 getter setter
+            Vue.util.defineReactive(tempErrors, key, []);
 
 
             //监听错误 移除对应的Class
