@@ -28,33 +28,33 @@ var validate = function (field, rule) {
     var self = this;                          //this指向组件
     var vm = self;                         //Vue组件对象
     var value = _.get(vm, field);
-
+    
     //如果为验证规则为数组则进行遍历
     if (Array.isArray(rule)) {
         return rule.map(function (item) {
                 return validate.call(self, field, item);
             }).indexOf(false) === -1;
     }
-
+    
     // 为字符串时调用默认规则
     if (is("String", rule)) {
         rule = defaultRules[rule];
     }
-
+    
     // //如果验证规则不存在 结束
     if (!(rule && (rule.test || rule.maxLength || rule.minLength))) {
         console.warn("rule of " + field + " not define");
         return false;
     }
-
-
-    var valid=true;
+    
+    
+    var valid = true;
     if (rule && rule.test) {
         //验证数据
         valid = is("Function", rule.test) ? rule.test.call(this, value) : rule.test.test(value);
     }
-
-
+    
+    
     if (rule && rule.maxLength) {
         if (value.length > rule.maxLength) {
             valid = false;
@@ -63,21 +63,20 @@ var validate = function (field, rule) {
             }
         }
     }
-
+    
     if (rule && rule.minLength) {
         if (value.length < rule.minLength) {
             valid = false;
             if (!rule.message) {
-                rule.message = "至少" + rule.minLength + "个字符";
+                rule.message = "至少" + rule.maxLength + "个字符";
             }
         }
     }
-
-
-
+    
+    
     //错误对象
     var $error = _.get(vm.$verify.$errors, field);
-
+    
     //验证未通过
     if (!valid) {
         $error.push(rule.message);
@@ -96,7 +95,7 @@ Verify.prototype.check = function (group) {
             console.warn(group + " not found in the component");
         }
     }
-
+    
     //分组处理
     if (group && vm.$verify.verifyQueue[group]) {
         verifyQueue = vm.$verify.verifyQueue[group];
@@ -106,10 +105,10 @@ Verify.prototype.check = function (group) {
             verifyQueue = verifyQueue.concat(verifyQueue, vm.$verify.verifyQueue[k])
         }
     }
-
+    
     //错误数组,按照本次验证的顺序推入数组
     vm.$verify.$errorArray = [];
-
+    
     //遍历验证队列进行验证
     return verifyQueue.map(function (item) {
             if (_.get(rules, item)) {
@@ -117,8 +116,8 @@ Verify.prototype.check = function (group) {
                 return validate.call(self.vm, item, _.get(rules, item));
             }
         }).indexOf(false) === -1;
-
-
+    
+    
 };
 
 var init = function () {
@@ -146,12 +145,12 @@ var Directive = function (Vue, options) {
             var vm = vnode.context;//当前组件实例
             var expression = binding.expression;
             var errorClass = el.getAttribute('verify-class') || 'verify-error';
-
+            
             //得到焦点 移除错误
             el.addEventListener("focus", function () {
                 _.set(vm.$verify.$errors, expression, []);
             });
-
+            
             //失去焦点 进行验证
             if (options && options.blur) {
                 el.addEventListener("blur", function () {
@@ -159,7 +158,7 @@ var Directive = function (Vue, options) {
                     validate.call(vm, expression, _.get(vm.$options.verify, expression));
                 });
             }
-
+            
             //添加到验证队列
             var group;
             if (binding.rawName.split(".").length > 1) {
@@ -177,22 +176,36 @@ var Directive = function (Vue, options) {
                 vm.$verify.verifyQueue[group] = [];
                 vm.$verify.verifyQueue[group].push(expression);
             }
-    
-            // //错误默认值为空
+            
+            /**
+             *
+             
+             //添加数据监听绑定 getter setter
+             Vue.util.defineReactive(vm.$verify.$errors, expression, []);
+             
+             //错误默认值为空
+             _.set(vm.$verify.$errors, expression, []);
+             */
+            
+            
             _.set(vm.$verify.$errors, expression, []);
-    
+            
             var tempExpression=expression.split(".");
             var tempErrors=vm.$verify.$errors;
+            // debugger;
             for(let i=0;i<tempExpression.length-1;i++){
                 tempErrors=tempErrors[tempExpression[i]];
             }
             var key=tempExpression[tempExpression.length-1];
-    
-    
+            
+            
             //添加数据监听绑定 getter setter
             Vue.util.defineReactive(tempErrors, key, []);
-
-
+            
+            
+            // //错误默认值为空
+            _.set(vm.$verify.$errors, expression, []);
+            
             //监听错误 移除对应的Class
             vm.$watch("$verify.$errors." + expression, function (val) {
                 if (val.length) {
@@ -203,7 +216,7 @@ var Directive = function (Vue, options) {
             });
         }
     });
-
+    
     Vue.directive("verified", {
         update: function (el, binding, vnode, oldVnode) {
             if (binding.value && Array.isArray(binding.value) && binding.value.length > 0) {
@@ -215,6 +228,27 @@ var Directive = function (Vue, options) {
                 el.innerHTML = binding.value[0];
             } else {
                 domTools.apply(el, false);
+                el.innerHTML = "";
+            }
+        }
+    })
+    
+    Vue.directive("remind",{
+        update:function(el,binding,vnode,oldVnode){
+            var expression=binding.expression;
+            var errorText;
+            if(vnode.context.$verify.$errors){
+                errorText=_.get(vnode.context.$verify.$errors,expression);
+            }
+            if(errorText.length){
+                domTools.apply(el, true);
+                if (binding.modifiers.join) {
+                    el.innerHTML = errorText.join(",");
+                    return;
+                }
+                el.innerHTML = errorText[0];
+            }else {
+                domTools.apply(el, true);
                 el.innerHTML = "";
             }
         }
