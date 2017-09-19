@@ -68,7 +68,7 @@ var validate = function (field, rule) {
         if (value.length < rule.minLength) {
             valid = false;
             if (!rule.message) {
-                rule.message = "至少" + rule.maxLength + "个字符";
+                rule.message = "至少" + rule.minLength + "个字符";
             }
         }
     }
@@ -190,13 +190,13 @@ var Directive = function (Vue, options) {
             
             _.set(vm.$verify.$errors, expression, []);
             
-            var tempExpression=expression.split(".");
-            var tempErrors=vm.$verify.$errors;
+            var tempExpression = expression.split(".");
+            var tempErrors = vm.$verify.$errors;
             // debugger;
-            for(let i=0;i<tempExpression.length-1;i++){
-                tempErrors=tempErrors[tempExpression[i]];
+            for (let i = 0; i < tempExpression.length - 1; i++) {
+                tempErrors = tempErrors[tempExpression[i]];
             }
-            var key=tempExpression[tempExpression.length-1];
+            var key = tempExpression[tempExpression.length - 1];
             
             
             //添加数据监听绑定 getter setter
@@ -233,21 +233,21 @@ var Directive = function (Vue, options) {
         }
     })
     
-    Vue.directive("remind",{
-        update:function(el,binding,vnode,oldVnode){
-            var expression=binding.expression;
+    Vue.directive("remind", {
+        update: function (el, binding, vnode, oldVnode) {
+            var expression = binding.expression;
             var errorText;
-            if(vnode.context.$verify.$errors){
-                errorText=_.get(vnode.context.$verify.$errors,expression);
+            if (vnode.context.$verify.$errors) {
+                errorText = _.get(vnode.context.$verify.$errors, expression);
             }
-            if(errorText.length){
+            if (errorText.length) {
                 domTools.apply(el, true);
                 if (binding.modifiers.join) {
                     el.innerHTML = errorText.join(",");
                     return;
                 }
                 el.innerHTML = errorText[0];
-            }else {
+            } else {
                 domTools.apply(el, true);
                 el.innerHTML = "";
             }
