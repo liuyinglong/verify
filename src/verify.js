@@ -3,7 +3,7 @@
  */
 
 var defaultRules = require("./defaultRules");
-var _ = require("lodash");
+var _ = require('lodash/object');
 var domTools = require("./domTools");
 
 /**
@@ -193,7 +193,7 @@ var Directive = function (Vue, options) {
             var tempExpression = expression.split(".");
             var tempErrors = vm.$verify.$errors;
             // debugger;
-            for (let i = 0; i < tempExpression.length - 1; i++) {
+            for (var i = 0; i < tempExpression.length - 1; i++) {
                 tempErrors = tempErrors[tempExpression[i]];
             }
             var key = tempExpression[tempExpression.length - 1];
