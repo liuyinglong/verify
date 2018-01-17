@@ -2,7 +2,7 @@
 
 ### install 
 ```
-npm install vue-verify-plugin
+npm install verify-plugin
 ```
 
 ### use
