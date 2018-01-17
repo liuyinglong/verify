@@ -1,6 +1,6 @@
 {
-  "name": "vue-verify-plugin",
-  "version": "2.0.2",
+  "name": "verify-plugin",
+  "version": "0.0.2",
   "description": "vue validate plugin",
   "main": "./src/index.js",
   "scripts": {
@@ -9,22 +9,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liuyinglong/verify.git"
+    "url": "git+https://github.com/mvpleung/verify.git"
   },
-  "author": "liuyinglong",
+  "author": "mvpleung",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/liuyinglong/verify/issues"
+    "url": "https://github.com/mvpleung/verify/issues"
   },
-  "homepage": "https://github.com/liuyinglong/verify#readme",
+  "homepage": "https://github.com/mvpleung/verify#readme",
   "devDependencies": {
     "cross-env": "^4.0.0",
-    "lodash": "^4.17.4"
-  },
-  "dependencies": {
     "webpack": "^2.4.1",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
+    "lodash": "^4.17.4"
+  },
+  "dependencies": {
     "babel-polyfill": "^6.23.0",
     "babel-preset-latest": "^6.0.0"
   }
