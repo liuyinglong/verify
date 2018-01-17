@@ -1,33 +1,4 @@
-module.exports=  (function () {
-
-    /**
-     * Guard text output, make sure undefined outputs
-     * empty string
-     *
-     * @param {*} value
-     * @return {String}
-     */
-
-    function _toString(value) {
-        return value == null ? '' : value.toString();
-    }
-
-    /**
-     * Check and convert possible numeric strings to numbers
-     * before setting back to data
-     *
-     * @param {*} value
-     * @return {*|Number}
-     */
-
-    function toNumber(value) {
-        if (typeof value !== 'string') {
-            return value;
-        } else {
-            var parsed = Number(value);
-            return isNaN(parsed) ? value : parsed;
-        }
-    }
+module.exports = (function() {
 
     // Browser environment sniffing
     var inBrowser = typeof window !== 'undefined' && Object.prototype.toString.call(window) !== '[object Object]';
@@ -37,9 +8,6 @@ module.exports=  (function () {
     // UA sniffing for working around browser-specific quirks
     var UA = inBrowser && window.navigator.userAgent.toLowerCase();
     var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
-    var isAndroid = UA && UA.indexOf('android') > 0;
-    var isIos = UA && /(iphone|ipad|ipod|ios)/i.test(UA);
-    var isWechat = UA && UA.indexOf('micromessenger') > 0;
 
     /**
      * Check if a node is in the document.
@@ -259,12 +227,36 @@ module.exports=  (function () {
         el.style.display = value ? '' : 'none';
     }
 
+    /**
+     * 查找Dom
+     * @param {*} el 
+     * @param {*} tagName 
+     */
+    function findDom(el, tagNames) {
+        let _el = el;
+        if (_el.tagName !== 'INPUT' && _el.tagName !== 'SELECT' && _el.tagName !== 'TEXTAREA') {
+            tagNames = Array.isArray(tagNames) ? tagNames : [tagNames];
+            for (let i = 0; i < tagNames.length; i++) {
+                let item = tagNames[i];
+                _el = el.querySelector(`${item}[data-primary]`) || el.querySelector(item);
+                if (_el) {
+                    break;
+                }
+            }
+            if (!_el) {
+                el.setAttribute('tabindex', '0');
+                el.setAttribute('hidefocus', 'true');
+                el.setAttribute('style', 'outline-color:white');
+            }
+        }
+        return _el || el;
+    }
+
     return {
+        inDoc: inDoc,
         removeClass: removeClass,
         addClass: addClass,
-        apply: apply
+        apply: apply,
+        findDom: findDom
     }
 })();
-
-  
-
