@@ -23,7 +23,7 @@ npm install verify-plugin
 
 <script>
     import Vue from "vue";
-    import verify from "vue-verify-plugin";
+    import verify from "verify-plugin";
     Vue.use(verify,{
         blur:true
     });
@@ -173,7 +173,7 @@ verify: {
 ### 自定义验证规则一 
 ```js
     import Vue from "vue";
-    import verify from "vue-verify-plugin";
+    import verify from "verify-plugin";
     var myRules={
         max6:{
             test:function(val){
@@ -224,7 +224,7 @@ verify: {
 
 ```js
     import Vue from "vue";
-    import verify from "vue-verify-plugin";
+    import verify from "verify-plugin";
     
     export default {
         name: 'app',
