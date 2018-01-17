@@ -76,12 +76,13 @@ vm.$verify.$errorArray 存储上一次验证的错误
 ```
 
 ### 自定义属性说明
+[data-verify]
 ```js
 {
     blur: Bool, //是否支持 blur 校验
     replace: {}, //v-model 校验键名替换项，比如 v-model="a[index].c" with replace:{index:1} => v-model="a[1].c"
     ignore: Bool, //是否忽略当前校验，用于动态操作校验逻辑，比如条件下的动态忽略
-    error: [] //自定义错误提示
+    error: [] //自定义错误提示，按定义规则顺序取值
 }
 ```
 
