@@ -124,7 +124,6 @@ let verifyInit = function (_Vue, options) {
 let Directive = function (Vue, options) {
     Vue.directive("verify", {
         bind: function (el, binding, vnode, oldVnode) {
-            console.log(binding)
             let vm = vnode.context; //当前组件实例
             let expression = binding.expression.replace(new RegExp("'", 'gm'), ''); //处理字符串形式的校验规则，比如 "'required|email'"
             if (expression === null || expression === '' || expression.length === 0) return;
