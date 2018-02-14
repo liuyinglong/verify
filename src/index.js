@@ -2,9 +2,9 @@
  * @Author: focus 
  * @Date: 2017-06-22
  * @Last Modified by: liangzc
- * @Last Modified time: 2018-01-16 16:54:26
+ * @Last Modified time: 2018-02-13 14:54:30
  */
-import verify from "./verify";
+import verify from './verify';
 
 // //配置项
 // options : {
@@ -28,7 +28,7 @@ import verify from "./verify";
 // }
 
 if (typeof window !== 'undefined' && window.Vue) {
-    window.Vue.use(verify);
+  window.Vue.use(verify);
 }
 
 export default verify;
