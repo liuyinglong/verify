@@ -153,7 +153,7 @@ this.$verify.check("student")
 
 
 ##### 默认验证规则
-参考 ./src/defaultRules
+[参考./src/defaultRules](./src/defaultRules)
 - email 邮箱规则验证
 - mobile 手机号码验证
 - required 必填
