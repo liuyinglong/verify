@@ -69,10 +69,10 @@ vm.$verify.$errorArray 存储上一次验证的错误
 {
     rules:{}//自定义验证方法
     blur:Bool //失去焦点时 是否开启验证
-	msgbox: Function, //自定义消息提示框
-	force: Bool, //是否强制使用 msgBox
-	scrollToEl: Bool, //是否滚动到校验的Dom节点
-	field: { //针对输入框的单独配置
+    msgbox: Function, //自定义消息提示框
+    force: Bool, //是否强制使用 msgBox
+    scrollToEl: Bool, //是否滚动到校验的Dom节点
+    field: { //针对输入框的单独配置
         msgbox: Bool, //输入框单独校验时是否使用 msgBox
         offsetTop: Number //滚动偏移量，配合 scrollToEl 使用
     },
@@ -99,7 +99,7 @@ vm.$verify.$errorArray 存储上一次验证的错误
 ##### v-verify 指令支持对象字面量（覆盖自定义属性）
 ```js
 {
-	rule: 'require', //校验规则,仅支持字符串
+    rule: 'require', //校验规则,仅支持字符串
     blur: Bool, //是否支持 blur 校验
     replace: Object, //v-model 校验键名替换项，比如 v-model="a[index].c" with replace:{index:1} => v-model="a[1].c"
     ignore: Bool, //是否忽略当前校验，用于动态操作校验逻辑，比如条件下的动态忽略
@@ -140,7 +140,7 @@ this.$verify.check("student")
 ##### v-remind 指令支持对象字面量（覆盖自定义属性）
 ```js
 {
-	field: 'code', //校验提示字段，仅支持字符串
+    field: 'code', //校验提示字段，仅支持字符串
     blur: Bool, //是否支持 blur 校验
     replace: Object, //v-model 校验键名替换项，比如 v-model="a[index].c" with replace:{index:1} => v-model="a[1].c"
     ignore: Bool, //是否忽略当前校验，用于动态操作校验逻辑，比如条件下的动态忽略
