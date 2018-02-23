@@ -2,7 +2,7 @@
  * @Author: focus 
  * @Date: 2017-06-22
  * @Last Modified by: liangzc
- * @Last Modified time: 2018-02-13 14:54:30
+ * @Last Modified time: 2018-02-23 11:28:04
  */
 import verify from './verify';
 
@@ -24,6 +24,20 @@ import verify from './verify';
 //     blur: blur, //是否支持 blur 校验
 //     replace: {}, //v-model 校验键名替换项，比如 v-model="a[index].c" with replace:{index:1} => v-model="a[1].c"
 //     ignore: false, //是否忽略当前校验，用于动态操作校验逻辑，比如条件下的动态忽略
+//     error: [] //自定义错误提示
+// }
+
+// //指令字面量属性
+// [v-verify]: {
+//     rule: 'require', //校验规则,仅支持字符串
+//     blur: blur, //是否支持 blur 校验
+//     replace: {}, //v-model 校验键名替换项，比如 v-model="a[index].c" with replace:{index:1} => v-model="a[1].c"
+//     error: [] //自定义错误提示
+// }
+// [v-remind]: {
+//     field: 'code', //校验提示字段，仅支持字符串
+//     blur: blur, //是否支持 blur 校验
+//     replace: {}, //v-model 校验键名替换项，比如 v-model="a[index].c" with replace:{index:1} => v-model="a[1].c"
 //     error: [] //自定义错误提示
 // }
 

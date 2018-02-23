@@ -114,7 +114,9 @@ module.exports = (function() {
    * @param {Function} callback 回调函数
    */
   function defineAttr(vm, el, binding, callback) {
-    let verifyAttr = parseJson(el.getAttribute('data-verify')) || {};
+    let verifyAttr = is('Object', binding.value) ?
+      binding.value :
+      parseJson(el.getAttribute('data-verify')) || {};
     if (!verifyAttr.hasOwnProperty('blur')) {
       verifyAttr.blur = true;
     }

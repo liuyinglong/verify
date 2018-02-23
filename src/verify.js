@@ -3,9 +3,8 @@
  * @Author: focus 
  * @Date: 2017-04-14
  * @Last Modified by: liangzc
- * @Last Modified time: 2018-02-13 17:01:44
+ * @Last Modified time: 2018-02-23 11:26:58
  */
-    this.verifyQueue = {}; //验证队列
 let _ = require('lodash/object'),
   domTools = require('./domTools'),
   helper = require('./helper'),
@@ -177,7 +176,10 @@ let Directive = function(Vue, options) {
   Vue.directive('verify', {
     bind: function(el, binding, vnode, oldVnode) {
       let vm = vnode.context; //当前组件实例
-      let expression = binding.expression.replace(new RegExp('\'', 'gm'), ''); //处理字符串形式的校验规则，比如 "'required|email'"
+      let bindingExpress = helper.is('Object', binding.value) ?
+        binding.value.rule :
+        binding.expression;
+      let expression = bindingExpress.replace(new RegExp('\'', 'gm'), ''); //处理字符串形式的校验规则，比如 "'required|email'"
       if (expression === null || expression === '' || expression.length === 0)
         return;
       //提取 field
@@ -258,7 +260,7 @@ let Directive = function(Vue, options) {
 
       //添加数据监听绑定 getter setter
       let isVerConfig =
-        helper.isVerifyConfig(binding.expression) && helper.isVerifyConfig(key);
+        helper.isVerifyConfig(bindingExpress) && helper.isVerifyConfig(key);
       Vue.util.defineReactive(
         tempErrors,
         isVerConfig ? key : binding.field,
@@ -289,27 +291,37 @@ let Directive = function(Vue, options) {
   Vue.directive('remind', {
     bind: function(el, binding, vnode, oldVnode) {
       //缓存使用 remind 提示的字段，遇到此字段时 remind 提示优先
-      binding.field = binding.expression.replace(new RegExp('\'', 'gm'), '');
+      binding.field = (helper.is('Object', binding.value) ?
+        binding.value.field :
+        binding.expression
+      ).replace(new RegExp('\'', 'gm'), '');
       helper.defineAttr(vnode.context, el, binding);
     },
     update: function(el, binding, vnode, oldVnode) {
-      let attrs = vnode.data.attrs;
-      if (attrs && attrs.hasOwnProperty('data-verify')) {
-        let verifyAttr = helper.parseJson(attrs['data-verify']);
-        if (verifyAttr.replace) {
-          binding.field = binding.expression.replace(new RegExp('\'', 'gm'), '');
-          for (let attr in verifyAttr.replace) {
-            binding.field = binding.field.replace(
-              new RegExp(attr, 'gm'),
-              verifyAttr.replace[attr]
-            );
-          }
+      let verifyAttr = helper.is('Object', binding.value) ?
+        binding.value :
+        vnode.data.attrs && vnode.data.attrs.hasOwnProperty('data-verify') ?
+          helper.parseJson(attrs['data-verify']) :
+          {};
+      if (verifyAttr.replace) {
+        binding.field = (verifyAttr.field || binding.expression).replace(
+          new RegExp('\'', 'gm'),
+          ''
+        );
+        for (let attr in verifyAttr.replace) {
+          binding.field = binding.field.replace(
+            new RegExp(attr, 'gm'),
+            verifyAttr.replace[attr]
+          );
         }
       }
       let errors = vnode.context.$verify.$errors,
         errorText;
       if (errors) {
-        errorText = _.get(errors, binding.field || binding.expression);
+        errorText = _.get(
+          errors,
+          binding.field || verifyAttr.field || binding.expression
+        );
       }
       if (errorText && errorText.length) {
         domTools.apply(el, true);
