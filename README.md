@@ -108,7 +108,7 @@ vm.$verify.$errorArray 存储上一次验证的错误
 ```
 
 ##### v-verify 修饰符说明
-该指令最后一个修饰符为自定义分组  
+> 该指令最后一个修饰符为自定义分组  
 ```js
 //自定义teacher分组
 v-verify.teacher
@@ -126,16 +126,13 @@ this.$verify.check();
 ```
 
 ##### v-verify指令也可使用 arg参数进行验证分组 
-**如果同时使用修饰符和arg分组 则arg会覆盖修饰符分组**
+> 如果同时使用修饰符和arg分组 则arg会覆盖修饰符分组**
 
 ```js
 v-verify:student
 //验证student 分组
 this.$verify.check("student")
 ```
-
-
-#### v-remind 验证错误提示
 
 ##### v-remind 指令支持对象字面量（覆盖自定义属性）
 ```js
@@ -146,36 +143,10 @@ this.$verify.check("student")
     ignore: Bool, //是否忽略当前校验，用于动态操作校验逻辑，比如条件下的动态忽略
     error: Array //自定义错误提示，按定义规则顺序取值
 }
+```
 
 ##### v-remind修饰符说明
 > .join 展示所有错误 用逗号隔开
-
-```vue 
-<script>
-verify: {
-    username: [
-        "required",
-        {
-            minLength:2,
-            message: "姓名不得小于两位"
-        },
-        {
-            maxLength:5,
-            message: "姓名不得大于5位"
-        }
-    ],
-    mobile:["required","mobile"],
-    email:"email"
-    url:"url"
-    pwd: {
-        minLength:6,
-        message: "密码不得小于6位"
-    }
-},
-</script>
-
-
-```
 
 ### 默认规则
 [默认校验规则](./src/defaultRules.js)
@@ -270,13 +241,13 @@ verify: {
             age:"required",
             teacher:[
                 {
-                 	test:function(val){
-                    	if(val.length>6) {
-                            return false
-                        }
-                        return true;
-                    },
-                    message:"最大为6位"  
+                  test:function(val){
+                    if(val.length>6) {
+                        return false
+                     }
+                     return true;
+                   },
+                   message:"最大为6位"  
                 }
             ],
             regInfo: {
