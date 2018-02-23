@@ -150,19 +150,6 @@ this.$verify.check("student")
 ##### v-remind修饰符说明
 > .join 展示所有错误 用逗号隔开
 
-
-
-##### 默认验证规则
-[默认规则](./src/defaultRules)
-- email 邮箱规则验证
-- mobile 手机号码验证
-- required 必填
-- url 链接规则验证
-- maxLength 最多maxLength个字符串(可自定义message)
-- minLength 最少minLength个字符串(可自定义)
-...
-
-
 ```vue 
 <script>
 verify: {
@@ -188,6 +175,17 @@ verify: {
 </script>
 
 
+```
+
+### 默认规则
+[默认校验规则](./src/defaultRules.js)
+```js
+- email 邮箱规则验证
+- mobile 手机号码验证
+- required 必填
+- url 链接规则验证
+- maxLength 最多maxLength个字符串(可自定义message)
+- minLength 最少minLength个字符串(可自定义)
 ```
 
 ### 行内校验规则
