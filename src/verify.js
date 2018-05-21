@@ -32,8 +32,8 @@ var validate = function (field, rule) {
     //如果为验证规则为数组则进行遍历
     if (Array.isArray(rule)) {
         return rule.map(function (item) {
-                return validate.call(self, field, item);
-            }).indexOf(false) === -1;
+            return validate.call(self, field, item);
+        }).indexOf(false) === -1;
     }
     
     // 为字符串时调用默认规则
@@ -111,11 +111,11 @@ Verify.prototype.check = function (group) {
     
     //遍历验证队列进行验证
     return verifyQueue.map(function (item) {
-            if (_.get(rules, item)) {
-                _.set(vm.$verify.$errors, item, []);
-                return validate.call(self.vm, item, _.get(rules, item));
-            }
-        }).indexOf(false) === -1;
+        if (_.get(rules, item)) {
+            _.set(vm.$verify.$errors, item, []);
+            return validate.call(self.vm, item, _.get(rules, item));
+        }
+    }).indexOf(false) === -1;
     
     
 };
@@ -248,7 +248,7 @@ var Directive = function (Vue, options) {
                 }
                 el.innerHTML = errorText[0];
             } else {
-                domTools.apply(el, true);
+                domTools.apply(el, false);
                 el.innerHTML = "";
             }
         }
