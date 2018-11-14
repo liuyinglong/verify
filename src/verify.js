@@ -234,24 +234,47 @@ var Directive = function (Vue, options) {
     })
     
     Vue.directive("remind", {
-        update: function (el, binding, vnode, oldVnode) {
+        bind: function (el, binding, vnode, oldVnode) {
             var expression = binding.expression;
-            var errorText;
-            if (vnode.context.$verify.$errors) {
-                errorText = _.get(vnode.context.$verify.$errors, expression);
-            }
-            if (errorText.length) {
-                domTools.apply(el, true);
-                if (binding.modifiers.join) {
-                    el.innerHTML = errorText.join(",");
-                    return;
+            var vm = vnode.context;//当前组件实例
+            domTools.apply(el, false);
+            //监听错误 移除对应的Class
+            vm.$watch("$verify.$errors." + expression, function (val) {
+                var errorText;
+                if (vnode.context.$verify.$errors) {
+                    errorText = _.get(vnode.context.$verify.$errors, expression);
                 }
-                el.innerHTML = errorText[0];
-            } else {
-                domTools.apply(el, false);
-                el.innerHTML = "";
-            }
-        }
+                if (errorText.length) {
+                    domTools.apply(el, true);
+                    if (binding.modifiers.join) {
+                        el.innerHTML = errorText.join(",");
+                        return;
+                    }
+                    el.innerHTML = errorText[0];
+                } else {
+                    domTools.apply(el, false);
+                    el.innerHTML = "";
+                }
+            });
+        },
+        // update: function (el, binding, vnode, oldVnode) {
+        //     var expression = binding.expression;
+        //     var errorText;
+        //     if (vnode.context.$verify.$errors) {
+        //         errorText = _.get(vnode.context.$verify.$errors, expression);
+        //     }
+        //     if (errorText.length) {
+        //         domTools.apply(el, true);
+        //         if (binding.modifiers.join) {
+        //             el.innerHTML = errorText.join(",");
+        //             return;
+        //         }
+        //         el.innerHTML = errorText[0];
+        //     } else {
+        //         domTools.apply(el, false);
+        //         el.innerHTML = "";
+        //     }
+        // }
     })
 };
 
