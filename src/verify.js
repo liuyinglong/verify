@@ -24,9 +24,9 @@ var Verify = function (VueComponent) {
     Vue.util.defineReactive(this, '$errors', {});
     this.clearError = function () {
         for (var key in this.verifyQueue) {
-            this.verifyQueue[key].forEach((item) => {
+            this.verifyQueue[key].forEach(function(item) {
                 _.set(this.$errors, item, [])
-            })
+            }.bind(this))
         }
         this.$errorArray = []
     }
