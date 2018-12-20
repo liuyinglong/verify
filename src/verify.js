@@ -22,6 +22,14 @@ var Verify = function (VueComponent) {
     this.vm = VueComponent;
     this.verifyQueue = {};                        //验证队列
     Vue.util.defineReactive(this, '$errors', {});
+    this.$verify.clearError = function () {
+        for (let key in this.verifyQueue) {
+            this.verifyQueue[key].forEach((item) => {
+                _.set(this.$errors, item, [])
+            })
+        }
+        this.$errorArray = []
+    }
 };
 
 var validate = function (field, rule) {
