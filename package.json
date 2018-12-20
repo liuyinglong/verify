@@ -1,6 +1,6 @@
 {
   "name": "vue-verify-plugin",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "vue validate plugin",
   "main": "./src/index.js",
   "scripts": {
