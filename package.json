@@ -1,6 +1,6 @@
 {
   "name": "vue-verify-plugin",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "vue validate plugin",
   "main": "./src/index.js",
   "scripts": {
@@ -22,10 +22,6 @@
     "lodash": "^4.17.4"
   },
   "dependencies": {
-    "webpack": "^2.4.1",
-    "babel-core": "^6.0.0",
-    "babel-loader": "^6.0.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-latest": "^6.0.0"
+    "webpack": "^2.4.1"
   }
 }
