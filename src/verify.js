@@ -154,27 +154,33 @@ var Directive = function (Vue, options) {
             var expression = binding.expression;
             var errorClass = el.getAttribute('verify-class') || 'verify-error';
 
-            //得到焦点 移除错误
-            el.addEventListener("focus", function () {
-                _.set(vm.$verify.$errors, expression, []);
-            });
+            if(vnode.componentInstance){
+                //组件得到焦点,移除错误
+                vnode.componentInstance.$on("focus", function () {
+                    _.set(vm.$verify.$errors, expression, []);
+                })
+            }else {
+                //得到焦点 移除错误
+                el.addEventListener("focus", function () {
+                    _.set(vm.$verify.$errors, expression, []);
+                });
+            }
 
-            //组件得到焦点,移除错误
-            vnode.componentInstance.$on("focus", function () {
-                _.set(vm.$verify.$errors, expression, []);
-            })
 
             //失去焦点 进行验证
             if (options && options.blur) {
-                el.addEventListener("blur", function () {
-                    vm.$verify.$errorArray = [];
-                    validate.call(vm, expression, _.get(vm.$options.verify, expression));
-                });
-                //组件失去焦点
-                vnode.componentInstance.$on("blur", function () {
-                    vm.$verify.$errorArray = [];
-                    validate.call(vm, expression, _.get(vm.$options.verify, expression));
-                });
+                if(vnode.componentInstance){
+                    //组件失去焦点
+                    vnode.componentInstance.$on("blur", function () {
+                        vm.$verify.$errorArray = [];
+                        validate.call(vm, expression, _.get(vm.$options.verify, expression));
+                    });
+                }else {
+                    el.addEventListener("blur", function () {
+                        vm.$verify.$errorArray = [];
+                        validate.call(vm, expression, _.get(vm.$options.verify, expression));
+                    });
+                }
             }
 
             //添加到验证队列
