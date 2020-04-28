@@ -5,6 +5,7 @@
 var defaultRules = require("./defaultRules");
 var _ = require('lodash/object');
 var domTools = require("./domTools");
+require('core-js/fn/object/assign')
 
 /**
  * check value type
